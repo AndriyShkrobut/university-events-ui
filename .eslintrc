@@ -1,0 +1,50 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest": true
+  },
+  "extends": [
+    "react-app/jest",
+    "airbnb",
+    "airbnb-typescript",
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "plugins": [
+    "import",
+    "prettier",
+    "react",
+    "react-hooks",
+    "jsx-a11y",
+    "jest",
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "react/button-has-type": "off",
+    "react/jsx-fragments": ["warn", "element"],
+    "react/require-default-props": [
+      "warn", {
+        "ignoreFunctionalComponents": true
+      }
+    ]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}
