@@ -7,9 +7,6 @@
     "jest": true
   },
   "extends": [
-    "react-app/jest",
-    "airbnb",
-    "airbnb-typescript",
     "eslint:recommended",
     "plugin:prettier/recommended",
     "plugin:react/recommended",
