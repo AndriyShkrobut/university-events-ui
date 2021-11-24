@@ -1,12 +1,7 @@
 import { AxiosResponse } from "axios";
-
+import { IUser } from "interfaces/user.interface";
 import httpClient from "./http-client.api";
 import { IApi } from "./api.interface";
-
-// TODO: define user interface
-export interface IUser {
-  id: string;
-}
 
 class UserApi implements IApi<IUser> {
   static BASE_URL = "/User";
