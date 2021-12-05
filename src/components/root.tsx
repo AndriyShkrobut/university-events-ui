@@ -1,8 +1,10 @@
 import React from "react";
 
+import App from "./app";
+
 const Root: React.FC = () => (
   <React.StrictMode>
-    <h1>Hello World!</h1>
+    <App />
   </React.StrictMode>
 );
 
