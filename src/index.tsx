@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import Root from "components/root";
 
-import "./index.css";
+import "./index.less";
 
 const root = document.getElementById("root");
 
