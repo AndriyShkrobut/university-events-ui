@@ -1,16 +1,22 @@
 import React from "react";
-import { Layout, Typography } from "antd";
+import { Typography } from "antd";
+
+import AuthContext from "context/auth-context";
+import { useProvideAuth } from "hooks/use-auth";
+import AppRoute from "./app-route";
+import AppLayout from "./app-layout";
 
 const App: React.FC = () => {
+  const auth = useProvideAuth();
+
   return (
-    <Layout>
-      <Layout.Header>
-        <Typography.Link>Logo</Typography.Link>
-      </Layout.Header>
-      <Layout.Content>
-        <Typography.Title>Hello World!</Typography.Title>
-      </Layout.Content>
-    </Layout>
+    <AuthContext.Provider value={auth}>
+      <AppLayout>
+        <AppRoute header={false} footer={false}>
+          <Typography.Title>Hello World!</Typography.Title>
+        </AppRoute>
+      </AppLayout>
+    </AuthContext.Provider>
   );
 };
 

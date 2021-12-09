@@ -2,10 +2,6 @@ import React from "react";
 
 import App from "./app";
 
-const Root: React.FC = () => (
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const Root: React.FC = () => <App />;
 
 export default Root;
