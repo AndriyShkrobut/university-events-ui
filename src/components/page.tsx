@@ -3,11 +3,9 @@ import { Layout } from "antd";
 import Header from "./header";
 import Footer from "./footer";
 
-const AppRoute: React.FC<{ header: boolean; footer: boolean }> = ({
-  children,
-  header = true,
-  footer = true,
-}) => {
+export type PageProps = { header?: boolean; footer?: boolean };
+
+const Page: React.FC<PageProps> = ({ children, header = true, footer = true }) => {
   return (
     <React.Fragment>
       {header && <Header />}
@@ -17,4 +15,4 @@ const AppRoute: React.FC<{ header: boolean; footer: boolean }> = ({
   );
 };
 
-export default AppRoute;
+export default Page;

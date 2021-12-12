@@ -10,3 +10,6 @@ export interface IUser {
   image: IImage;
   roles: IRole[];
 }
+
+export type ICreateUserPayload = FormData;
+export type IEditUserPayload = FormData;

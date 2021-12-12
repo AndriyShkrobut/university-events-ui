@@ -1,28 +1,28 @@
 import { AxiosResponse } from "axios";
-import { IUser } from "interfaces/user.interface";
+import { ICreateUserPayload, IUser } from "interfaces/user.interface";
 import httpClient from "./http-client.api";
-import { IApi } from "./api.interface";
+import { IApi } from "interfaces/api.interface";
 
 class UserApi implements IApi<IUser> {
-  static BASE_URL = "/User";
+  static BASE_URL = "/user";
 
-  create(body: IUser): Promise<AxiosResponse<IUser>> {
+  create(body: ICreateUserPayload): Promise<AxiosResponse<IUser>> {
     return httpClient.post(UserApi.BASE_URL, body);
   }
 
-  delete(id: string): Promise<AxiosResponse<IUser>> {
+  delete(id: number): Promise<AxiosResponse<IUser>> {
     return httpClient.delete(`${UserApi.BASE_URL}/${id}`);
   }
 
-  getAll(params?: { [p: string]: string | number }): Promise<AxiosResponse<IUser>> {
+  getAll(params?: { [p: string]: string | number }): Promise<AxiosResponse<IUser[]>> {
     return httpClient.get(UserApi.BASE_URL, { params });
   }
 
-  getOne(id: string): Promise<AxiosResponse<IUser>> {
+  getOne(id: number): Promise<AxiosResponse<IUser>> {
     return httpClient.get(`${UserApi.BASE_URL}/${id}`);
   }
 
-  update(id: string, body: IUser): Promise<AxiosResponse<IUser>> {
+  update(id: number, body: IUser): Promise<AxiosResponse<IUser>> {
     return httpClient.put(`${UserApi.BASE_URL}/${id}`, body);
   }
 }

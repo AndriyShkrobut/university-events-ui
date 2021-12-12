@@ -1,10 +1,9 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { ACCESS_TOKEN_KEY } from "../providers/auth.provider";
 
 const httpClient = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 });
-
-export const ACCESS_TOKEN_KEY = "access_token";
 
 const injectAccessToken = (config: AxiosRequestConfig) => {
   const token = window.localStorage.getItem(ACCESS_TOKEN_KEY);
