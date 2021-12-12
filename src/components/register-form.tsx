@@ -42,7 +42,7 @@ const RegisterForm: React.FC = () => {
 
   const handleSubmit: FormProps["onFinish"] = (values: FormValues) => {
     const userData = mapFormValuesToUser(values);
-    
+
     createUser(userData)
       .then(() => {
         const loginData = { login: values.email, password: values.password };
