@@ -8,8 +8,8 @@ export interface IEvent {
   id: number;
   title: string;
   description: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   createDate: Date;
   location: string;
   isDeleted: boolean;
@@ -20,3 +20,6 @@ export interface IEvent {
   guests: IEventGuest[];
   images: IEventImage[];
 }
+
+export type ICreateEventPayload = FormData;
+export type IUpdateEventPayload = FormData;

@@ -1,16 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import UserApi from "./api/user.api";
 import Root from "components/root";
 
 import "./index.less";
+import { notification } from "antd";
 
 const root = document.getElementById("root");
-const response = UserApi.getAll();
-response.then((result) => {
-  console.log(result.data);
-});
 
 if (root) {
+  notification.config({ placement: "bottomRight" });
   ReactDOM.render(<Root />, root);
 }

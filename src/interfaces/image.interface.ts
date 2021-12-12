@@ -1,5 +1,6 @@
 export interface IImage {
-  id: number;
-  container: string;
+  id: string;
   name: string;
+  extension: string;
+  url: string;
 }

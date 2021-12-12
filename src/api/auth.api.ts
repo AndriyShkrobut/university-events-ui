@@ -1,13 +1,12 @@
 import { AxiosResponse } from "axios";
 import httpClient from "./http-client.api";
-import { IToken } from "interfaces/token.interface";
+import { IAuth, ILoginPayload } from "interfaces/auth.interface";
 
-//Check it please
 class AuthApi {
-  static BASE_URL = "/Auth";
+  static BASE_URL = "/auth";
 
-  create(body: IToken): Promise<AxiosResponse<IToken>> {
-    return httpClient.post(`${AuthApi.BASE_URL}/${body}`);
+  login(body: ILoginPayload): Promise<AxiosResponse<IAuth>> {
+    return httpClient.post(AuthApi.BASE_URL, body);
   }
 }
 
