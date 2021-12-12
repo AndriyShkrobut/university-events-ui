@@ -14,6 +14,7 @@ export const mapFormValuesToUser = (formValues: FormValues): FormData => {
   if (image && image.length) {
     const [file] = image;
     const fileObject = file.originFileObj;
+    
     if (fileObject) {
       formData.append("image", fileObject);
     }
