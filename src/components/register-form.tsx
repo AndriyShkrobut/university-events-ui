@@ -42,7 +42,6 @@ const RegisterForm: React.FC = () => {
 
   const handleSubmit: FormProps["onFinish"] = (values: FormValues) => {
     const userData = mapFormValuesToUser(values);
-
     createUser(userData)
       .then(() => {
         const loginData = { login: values.email, password: values.password };
@@ -100,7 +99,7 @@ const RegisterForm: React.FC = () => {
       <Form.Item label="Email" name="email" rules={[requiredRule, emailRule]} required>
         <Input placeholder="example@example.com" />
       </Form.Item>
-      <Form.Item label="Фото профілю" name="photo" valuePropName={"fileList"}>
+      <Form.Item label="Фото профілю" name="image" valuePropName={"fileList"}>
         <FileUploader listType={"picture"} maxCount={1} />
       </Form.Item>
       <Form.Item label="Пароль" name="password" rules={[requiredRule]}>

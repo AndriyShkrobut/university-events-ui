@@ -1,4 +1,3 @@
-import { IEvent } from "./event.interface";
 import { IImage } from "./image.interface";
 
 export interface IEventImage {
