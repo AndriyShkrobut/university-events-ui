@@ -6,8 +6,9 @@ import { Routes, Route } from "react-router-dom";
 import Home from "pages/home";
 import Register from "pages/register";
 import Login from "pages/login";
-import CreateEvent from "../pages/create-event";
-import EditEvent from "../pages/edit-event";
+import CreateEvent from "pages/create-event";
+import EditEvent from "pages/edit-event";
+import NotFound from "./not-found";
 
 const App: React.FC = () => {
   return (
@@ -37,6 +38,14 @@ const App: React.FC = () => {
           element={
             <Page header={false} footer={false}>
               <Login />
+            </Page>
+          }
+        />
+        <Route
+          path={"*"}
+          element={
+            <Page>
+              <NotFound />
             </Page>
           }
         />
