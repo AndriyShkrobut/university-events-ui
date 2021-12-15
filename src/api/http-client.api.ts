@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { ACCESS_TOKEN_KEY } from "../providers/auth.provider";
+import { ACCESS_TOKEN_KEY } from "providers/auth.provider";
 
 const httpClient = axios.create({
   baseURL: process.env.REACT_APP_API_URL,

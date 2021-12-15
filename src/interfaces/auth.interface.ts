@@ -16,3 +16,8 @@ export interface ITokenPayload {
   Roles: string;
   exp: number;
 }
+
+export enum Role {
+  ADMIN = "Admin",
+  USER = "User",
+}
