@@ -34,6 +34,10 @@ export const mapFormValuesToEvent = (formValues: FormValues): FormData => {
   const organizerId = String(organizer);
   const categoryId = String(category);
 
+  if (!start || !end) {
+    throw new Error("Either startDate or endDate is missing");
+  }
+
   const startDate = start.utc().format();
   const endDate = end.utc().format();
 

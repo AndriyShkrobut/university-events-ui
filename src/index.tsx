@@ -8,6 +8,6 @@ import { notification } from "antd";
 const root = document.getElementById("root");
 
 if (root) {
-  notification.config({ placement: "bottomRight" });
+  notification.config({ placement: "bottomRight", duration: 7 });
   ReactDOM.render(<Root />, root);
 }

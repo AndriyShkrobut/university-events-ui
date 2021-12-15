@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
   Col,
@@ -15,16 +14,21 @@ import {
 } from "antd";
 import { Moment } from "moment";
 
-import { getMinMaxRule, requiredRule, validationMessages } from "common/validation";
-import { Mode } from "common/constants";
-import { useEvent, useEventCategory, useUser } from "hooks";
+import {
+  dateRangeRequiredRule,
+  getStringMinMaxRule,
+  requiredRule,
+  validationMessages,
+} from "common/validation";
+import { DATE_FORMAT, Mode } from "common/constants";
+import { useEventCategory, useUser } from "hooks";
 import { IUser } from "interfaces/user.interface";
+import { IEvent } from "interfaces/event.interface";
 import { IEventCategory } from "interfaces/event-category.interface";
-import { mapEventToFormValues, mapFormValuesToEvent } from "mappers/event.mapper";
+import { mapEventToFormValues } from "mappers/event.mapper";
 import FileUploader from "./file-uploader";
 
 import "./register-form.less";
-import { IEvent } from "../interfaces/event.interface";
 
 export type FormValues = {
   title: string;
@@ -37,9 +41,14 @@ export type FormValues = {
 };
 
 type EventFormProps = {
+  event?: IEvent;
+  isEventLoading?: boolean;
+  onSubmit(values: FormValues): Promise<void>;
   onCancel(): void;
   mode: Mode;
 };
+
+const MAX_DESCRIPTION_LENGTH = 400;
 
 const initialValues = {
   title: "",
@@ -49,87 +58,62 @@ const initialValues = {
   images: [],
 };
 
-const EventForm: React.FC<EventFormProps> = ({ onCancel, mode }) => {
-  const navigate = useNavigate();
+const EventForm: React.FC<EventFormProps> = ({
+  onCancel,
+  mode,
+  onSubmit,
+  event,
+  isEventLoading,
+}) => {
   const { users, getAllUsers } = useUser();
-  const { createEvent, updateEvent, getEventById } = useEvent();
   const { eventCategories, getAllEventCategories } = useEventCategory();
   const [form] = Form.useForm<FormValues>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [event, setEvent] = useState<IEvent>();
-  const { id } = useParams();
+  const [isFieldsDataLoading, setIsFieldsDataLoading] = useState<boolean>(false);
 
-  const handleSubmit: FormProps["onFinish"] = (values: FormValues) => {
-    setIsSubmitting(true);
+  const handleSubmit: FormProps["onFinish"] = useCallback(
+    (values: FormValues) => {
+      setIsSubmitting(true);
 
-    const eventData = mapFormValuesToEvent(values);
-
-    if (mode === Mode.CREATE) {
-      createEvent(eventData)
-        .then(() => {
-          navigate(-1);
-        })
-        .catch((error) => {
+      onSubmit(values)
+        // NOTE: catch of the error that could be thrown from mapper
+        .catch(() => {
           notification.error({
             message: "Помилка при створенні події",
-            description: error.message,
+            description: "Будь ласка перевірте правильність введених даних",
           });
         })
         .finally(() => {
           setIsSubmitting(false);
         });
-    } else if (mode === Mode.EDIT) {
-      const eventId = Number(id);
-      updateEvent(eventId, eventData)
-        .then(() => {
-          navigate(-1);
-        })
-        .catch((error) => {
-          notification.error({
-            message: "Помилка при редагуванні події",
-            description: error.message,
-          });
-        })
-        .finally(() => {
-          setIsSubmitting(false);
-        });
-    }
-  };
+    },
+    [onSubmit]
+  );
 
   useEffect(() => {
-    setIsLoading(true);
+    setIsFieldsDataLoading(true);
 
-    getAllUsers();
-    getAllEventCategories();
-
-    if (mode === Mode.EDIT) {
-      const eventId = Number(id);
-      getEventById(eventId)
-        .then((event) => {
-          setEvent(event);
-          return mapEventToFormValues(event);
-        })
-        .then((formValues) => {
-          form.setFieldsValue(formValues);
-        })
-        .finally(() => {
-          setIsLoading(false);
+    Promise.all([getAllUsers(), getAllEventCategories()])
+      .catch(() => {
+        notification.error({
+          message: "Сталася помилка під час завантаження даних. Спробуйте ще раз",
         });
-    }
-  }, [form, getAllEventCategories, getAllUsers, getEventById, id, mode]);
+      })
+      .finally(() => {
+        setIsFieldsDataLoading(false);
+      });
+  }, [getAllEventCategories, getAllUsers]);
 
-  if (mode === Mode.EDIT && isLoading) {
+  useEffect(() => {
+    if (mode === Mode.EDIT && event) {
+      const formValues = mapEventToFormValues(event);
+      form.setFieldsValue(formValues);
+    }
+  }, [event, form, mode]);
+
+  if (isFieldsDataLoading || isEventLoading) {
     return <Skeleton active paragraph={{ rows: 20 }} />;
   }
-
-  const handleImageRemove: UploadProps["onRemove"] = (...params) => {
-    if (mode !== Mode.EDIT) return;
-
-    if (event) {
-      console.log(params, event.images);
-    }
-  };
 
   return (
     <Form
@@ -139,6 +123,7 @@ const EventForm: React.FC<EventFormProps> = ({ onCancel, mode }) => {
       className={"create-event-form"}
       form={form}
       validateMessages={validationMessages}
+      validateTrigger={["onBlur"]}
       requiredMark
     >
       <Row gutter={32}>
@@ -146,26 +131,10 @@ const EventForm: React.FC<EventFormProps> = ({ onCancel, mode }) => {
           <Form.Item
             label="Назва"
             name="title"
-            rules={[requiredRule, getMinMaxRule(3, 50)]}
+            rules={[requiredRule, getStringMinMaxRule(3, 50)]}
             required
           >
             <Input placeholder="Назва вашої події" />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={{ span: 12, order: 3 }}>
-          <Form.Item
-            label="Опис"
-            name="description"
-            rules={[requiredRule, getMinMaxRule(3, 200)]}
-            required
-          >
-            <Input.TextArea
-              rows={5}
-              minLength={3}
-              maxLength={300}
-              placeholder="Опис вашої події"
-              showCount
-            />
           </Form.Item>
         </Col>
         <Col xs={24} md={{ span: 12, order: 2 }}>
@@ -179,10 +148,28 @@ const EventForm: React.FC<EventFormProps> = ({ onCancel, mode }) => {
             </Select>
           </Form.Item>
         </Col>
+        <Col span={24} order={3}>
+          <Form.Item
+            label="Опис"
+            name="description"
+            rules={[requiredRule, getStringMinMaxRule(3, MAX_DESCRIPTION_LENGTH)]}
+            required
+          >
+            <Input.TextArea
+              rows={5}
+              minLength={3}
+              maxLength={MAX_DESCRIPTION_LENGTH}
+              placeholder="Опис вашої події"
+              showCount
+            />
+          </Form.Item>
+        </Col>
         <Col xs={24} md={{ span: 12, order: 4 }}>
-          <Form.Item label="Локація" name="location" rules={[getMinMaxRule(5, 100)]}>
+          <Form.Item label="Локація" name="location" rules={[getStringMinMaxRule(5, 100)]}>
             <Input placeholder="Локація вашої події" />
           </Form.Item>
+        </Col>
+        <Col xs={24} md={{ span: 12, order: 5 }}>
           <Form.Item label="Організатор" name="organizer" rules={[requiredRule]} required>
             <Select placeholder="Організатор події">
               {users.map(({ id, name, surname }) => (
@@ -191,14 +178,31 @@ const EventForm: React.FC<EventFormProps> = ({ onCancel, mode }) => {
             </Select>
           </Form.Item>
         </Col>
-        <Col span={24} order={5}>
-          <Form.Item label="Зображення" name="images" valuePropName={"fileList"}>
-            <FileUploader listType={"picture-card"} maxCount={5} onRemove={handleImageRemove} />
+        <Col span={24} order={6}>
+          <Form.Item
+            label="Зображення"
+            name="images"
+            valuePropName={"fileList"}
+            validateTrigger={["onChange"]}
+            rules={[
+              {
+                type: "array",
+                min: 1,
+                max: 5,
+                message: "Подія має містити від 1 до 5 зображень",
+              },
+            ]}
+          >
+            <FileUploader listType={"picture-card"} maxCount={5} />
           </Form.Item>
         </Col>
-        <Col span={24} order={6}>
-          <Form.Item label="Термін події" name="dateRange" rules={[]} required>
-            <DatePicker.RangePicker showTime placeholder={["Початок", "Кінець"]} />
+        <Col span={24} order={7}>
+          <Form.Item label="Термін події" name="dateRange" rules={[dateRangeRequiredRule]} required>
+            <DatePicker.RangePicker
+              showTime
+              placeholder={["Початок", "Кінець"]}
+              format={DATE_FORMAT}
+            />
           </Form.Item>
         </Col>
       </Row>
@@ -219,4 +223,4 @@ const EventForm: React.FC<EventFormProps> = ({ onCancel, mode }) => {
   );
 };
 
-export default EventForm;
+export default React.memo(EventForm);
