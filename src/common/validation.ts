@@ -6,6 +6,11 @@ export const validationMessages = {
     max: "Не більше ${max} символів",
     range: "К-сть символів має бути між ${min} та ${max}",
   },
+  array: {
+    min: "Не менше ${min} елементів",
+    max: "Не більше ${max} елементів",
+    range: "К-сть елементів має бути між ${min} та ${max}",
+  },
 };
 
 export const requiredRule = { required: true };
@@ -22,10 +27,16 @@ export const phoneNumberRule = {
   message: "Невірний формат (0xxxxxxxxx, 0xx-xxx-xxxx, 0xx xxx xxxx)",
 };
 
-export const getMinMaxRule = (min: number, max: number): { min: number; max: number } => {
+export const getStringMinMaxRule = (min: number, max: number): { min: number; max: number } => {
   if (min >= max) {
     return { min: max, max: min };
   }
 
   return { min, max };
+};
+
+export const dateRangeRequiredRule = {
+  type: "array" as const,
+  len: 2,
+  message: "Обов'язкове поле (виберіть і стартову, і кінцеву дату)",
 };

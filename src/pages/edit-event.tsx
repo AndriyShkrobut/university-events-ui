@@ -1,16 +1,65 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Modal, notification } from "antd";
 
-import { Modal } from "antd";
-import EventForm from "components/event-form";
+import EventForm, { FormValues } from "components/event-form";
 import { Mode } from "common/constants";
+import { useEvent } from "hooks";
+import { mapFormValuesToEvent } from "mappers/event.mapper";
+import { IEvent } from "interfaces/event.interface";
 
 const EditEvent: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleCancel = () => {
+  const [event, setEvent] = useState<IEvent>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { id } = useParams();
+  const { updateEvent, getEventById } = useEvent();
+
+  const handleCancel = useCallback(() => {
     navigate(-1);
-  };
+  }, [navigate]);
+
+  const handleSubmit = useCallback(
+    (values: FormValues) => {
+      try {
+        const eventId = Number(id);
+        const eventData = mapFormValuesToEvent(values);
+
+        return updateEvent(eventId, eventData)
+          .then(() => {
+            notification.success({
+              message: "Подію успішно збережено",
+            });
+            navigate(-1);
+          })
+          .catch((error) => {
+            notification.error({
+              message: "Помилка при редагуванні події",
+              description: error.message,
+            });
+          });
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    },
+    [id, navigate, updateEvent]
+  );
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    const eventId = Number(id);
+
+    getEventById(eventId)
+      .then((data) => {
+        setEvent(data);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [getEventById, id]);
 
   return (
     <Modal
@@ -21,7 +70,13 @@ const EditEvent: React.FC = () => {
       visible
       centered
     >
-      <EventForm onCancel={handleCancel} mode={Mode.EDIT} />
+      <EventForm
+        onCancel={handleCancel}
+        onSubmit={handleSubmit}
+        mode={Mode.EDIT}
+        event={event}
+        isEventLoading={isLoading}
+      />
     </Modal>
   );
 };

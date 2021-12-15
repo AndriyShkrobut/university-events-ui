@@ -4,7 +4,7 @@ import { Button, Col, Form, FormProps, Input, notification, Row, UploadProps } f
 
 import {
   emailRule,
-  getMinMaxRule,
+  getStringMinMaxRule,
   phoneNumberRule,
   requiredRule,
   ukrainianCharactersRule,
@@ -81,7 +81,7 @@ const RegisterForm: React.FC = () => {
       <Form.Item
         label="Ім'я"
         name="name"
-        rules={[requiredRule, ukrainianCharactersRule, getMinMaxRule(3, 20)]}
+        rules={[requiredRule, ukrainianCharactersRule, getStringMinMaxRule(3, 20)]}
         required
       >
         <Input placeholder="Іван" />
@@ -89,7 +89,7 @@ const RegisterForm: React.FC = () => {
       <Form.Item
         label="Прізвище"
         name="surname"
-        rules={[requiredRule, ukrainianCharactersRule, getMinMaxRule(3, 20)]}
+        rules={[requiredRule, ukrainianCharactersRule, getStringMinMaxRule(3, 20)]}
         required
       >
         <Input placeholder="Ванич" />

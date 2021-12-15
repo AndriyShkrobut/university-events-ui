@@ -52,7 +52,7 @@ const EventProvider: React.FC = ({ children }) => {
   const deleteEvent = useCallback((id: number) => {
     return eventApi.delete(id).then((response) => {
       const { data } = response;
-      setEvents((prevState) => prevState.filter((item) => item.id === id));
+      setEvents((prevState) => prevState.filter((item) => item.id !== id));
       return data;
     });
   }, []);

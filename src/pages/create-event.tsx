@@ -1,15 +1,44 @@
-import React from "react";
-import { Modal } from "antd";
-import EventForm from "components/event-form";
+import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mode } from "../common/constants";
+import { Modal, notification } from "antd";
+
+import { Mode } from "common/constants";
+import EventForm, { FormValues } from "components/event-form";
+import { useEvent } from "hooks";
+import { mapFormValuesToEvent } from "mappers/event.mapper";
 
 const CreateEvent: React.FC = () => {
   const navigate = useNavigate();
+  const { createEvent } = useEvent();
 
-  const handleCancel = () => {
-    navigate("/", { replace: true });
-  };
+  const handleCancel = useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
+
+  const handleSubmit = useCallback(
+    (values: FormValues) => {
+      try {
+        const eventData = mapFormValuesToEvent(values);
+
+        return createEvent(eventData)
+          .then(() => {
+            notification.success({
+              message: "Подія була успішно створена",
+            });
+            navigate(-1);
+          })
+          .catch((error) => {
+            notification.error({
+              message: "Помилка при створенні події",
+              description: error.message,
+            });
+          });
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    },
+    [createEvent, navigate]
+  );
 
   return (
     <Modal
@@ -20,7 +49,7 @@ const CreateEvent: React.FC = () => {
       visible
       centered
     >
-      <EventForm onCancel={handleCancel} mode={Mode.CREATE} />
+      <EventForm onCancel={handleCancel} onSubmit={handleSubmit} mode={Mode.CREATE} />
     </Modal>
   );
 };
