@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Button, Col, Dropdown, Layout, Menu, Row, Skeleton, Space } from "antd";
+import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 import { PlusOutlined, UserOutlined } from "@ant-design/icons";
 
 import useAuth from "hooks/use-auth";
@@ -10,6 +11,12 @@ import "./header.less";
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const { isLoggedIn, isLoading, isAdmin, logout, user } = useAuth();
+  const { md } = useBreakpoint();
+
+  const logoSrc = useMemo(() => {
+    const baseStaticStorageUrl = process.env.REACT_APP_STATIC_STORAGE_URL;
+    return md ? `${baseStaticStorageUrl}/logo.svg` : `${baseStaticStorageUrl}/logo-small.svg`;
+  }, [md]);
 
   const handleLogin = () => {
     navigate("/login");
@@ -17,6 +24,12 @@ const Header: React.FC = () => {
 
   const handleCreateEvent = () => {
     navigate("/events/create");
+  };
+
+  const getResponsiveHeaderButtonText = (text: string, breakpoint?: boolean) => {
+    if (!breakpoint) return "";
+
+    return text;
   };
 
   const avatarSrc = useMemo<string>(() => {
@@ -30,10 +43,7 @@ const Header: React.FC = () => {
       <Row justify={"space-between"} align={"middle"}>
         <Col>
           <Link to={"/"}>
-            <img
-              src={"https://lnu.edu.ua/wp-content/themes/lnu-main/lib/images/logos/uk/main.svg"}
-              alt={"Logo"}
-            />
+            <img src={logoSrc} alt={"Логотип"} />
           </Link>
         </Col>
         <Col>
@@ -47,8 +57,14 @@ const Header: React.FC = () => {
           {isLoggedIn && !isLoading && (
             <Space size={"large"}>
               {isAdmin && (
-                <Button type={"primary"} icon={<PlusOutlined />} onClick={handleCreateEvent}>
-                  Створити подію
+                <Button
+                  type={"primary"}
+                  icon={<PlusOutlined />}
+                  onClick={handleCreateEvent}
+                  title={"Створити подію"}
+                  aria-label={"Створити подію"}
+                >
+                  {getResponsiveHeaderButtonText("Створити подію", md)}
                 </Button>
               )}
               <Dropdown
@@ -70,7 +86,7 @@ const Header: React.FC = () => {
           )}
           {!isLoggedIn && !isLoading && (
             <Button type={"primary"} onClick={handleLogin} icon={<UserOutlined />}>
-              Увійти
+              {getResponsiveHeaderButtonText("Увійти", md)}
             </Button>
           )}
         </Col>
