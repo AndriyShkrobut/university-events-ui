@@ -2,14 +2,14 @@ import React, { useMemo } from "react";
 import { Col, Empty, Row, Typography } from "antd";
 
 import { IEvent } from "interfaces/event.interface";
-import { SoonEventCard } from "./soon-event-card";
+import { EventCard } from "./event-card";
 
 type SoonEventsListProps = {
   events: IEvent[];
   isLoading: boolean;
 };
 
-export const SoonEventsList: React.FC<SoonEventsListProps> = ({ events = [], isLoading }) => {
+export const EventsList: React.FC<SoonEventsListProps> = ({ events = [], isLoading }) => {
   const isEmpty = useMemo<boolean>(
     () => events.length === 0 && !isLoading,
     [events.length, isLoading]
@@ -23,11 +23,11 @@ export const SoonEventsList: React.FC<SoonEventsListProps> = ({ events = [], isL
   return (
     <React.Fragment>
       <Typography.Title>Всі події</Typography.Title>
-      <Row gutter={[16, 16]} align={"stretch"}>
+      <Row gutter={[16, 16]}>
         {!isEmpty ? (
           eventsToRender.map((item, index) => (
-            <Col key={item.id || index} xs={24} lg={12}>
-              <SoonEventCard event={item} isLoading={isLoading} />
+            <Col key={item.id || index} xs={24} xl={12}>
+              <EventCard event={item} isLoading={isLoading} />
             </Col>
           ))
         ) : (

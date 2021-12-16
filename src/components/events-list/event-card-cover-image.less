@@ -1,0 +1,44 @@
+@import "~antd/es/style/themes/default.less";
+
+.ant-card-cover {
+  overflow: hidden;
+
+  .event-card-cover-image {
+    height: 120px;
+    object-fit: cover;
+    object-position: center center;
+    width: 100%;
+  }
+}
+
+@media (min-width: @screen-xs) {
+  .ant-card-cover {
+    .event-card-cover-image {
+      height: 160px;
+    }
+  }
+}
+
+@media (min-width: @screen-sm) {
+  .ant-card-cover {
+    .event-card-cover-image {
+      height: 200px;
+    }
+  }
+}
+
+@media (min-width: @screen-md) {
+  .ant-card-cover {
+    .event-card-cover-image {
+      height: 240px;
+    }
+  }
+}
+
+@media (min-width: @screen-lg) {
+  .ant-card-cover {
+    .event-card-cover-image {
+      height: 280px;
+    }
+  }
+}

@@ -8,7 +8,7 @@ type SoonEventCardAuthorAvatarProps = {
   author: IEvent["author"];
 };
 
-export const SoonEventCardAuthorAvatar: React.FC<SoonEventCardAuthorAvatarProps> = ({
+export const EventCardAuthorAvatar: React.FC<SoonEventCardAuthorAvatarProps> = ({
   author = {},
 }) => {
   const avatarSrc = useMemo<string>(() => {
@@ -23,7 +23,7 @@ export const SoonEventCardAuthorAvatar: React.FC<SoonEventCardAuthorAvatarProps>
 
   return (
     <Tooltip title={`${author.name} ${author.surname}`}>
-      <Avatar src={avatarSrc} alt={`${author.name} ${author.surname}`} />
+      <Avatar src={avatarSrc} alt={`${author.name} ${author.surname}`} icon={<UserOutlined />} />
     </Tooltip>
   );
 };

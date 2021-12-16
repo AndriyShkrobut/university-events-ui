@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Col, notification, Row } from "antd";
-import SoonEventsList from "components/soon-events-list";
+import EventsList from "components/events-list";
 import NewEventsList from "components/new-events-list";
 import useEvent from "hooks/use-event";
 import { Outlet } from "react-router-dom";
@@ -20,10 +20,10 @@ const Home: React.FC = () => {
   return (
     <React.Fragment>
       <Row justify={"center"} align={"top"} gutter={[32, 32]}>
-        <Col sm={24} md={16} xxl={18}>
-          <SoonEventsList events={events} isLoading={isLoading} />
+        <Col xs={24} xl={18}>
+          <EventsList events={events} isLoading={isLoading} />
         </Col>
-        <Col sm={24} md={8} xxl={6}>
+        <Col xs={24} xl={6}>
           <NewEventsList events={events} isLoading={isLoading} />
         </Col>
       </Row>
