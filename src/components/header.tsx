@@ -1,6 +1,17 @@
 import React, { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Avatar, Button, Col, Dropdown, Layout, Menu, Row, Skeleton, Space } from "antd";
+import {
+  Avatar,
+  Button,
+  Col,
+  Dropdown,
+  Layout,
+  Menu,
+  notification,
+  Row,
+  Skeleton,
+  Space,
+} from "antd";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 import { PlusOutlined, UserOutlined } from "@ant-design/icons";
 
@@ -20,6 +31,11 @@ const Header: React.FC = () => {
 
   const handleLogin = () => {
     navigate("/login");
+  };
+
+  const handleLogout = () => {
+    logout();
+    notification.success({ message: "Ви успішно вийшли з облікового запису" });
   };
 
   const handleCreateEvent = () => {
@@ -73,7 +89,7 @@ const Header: React.FC = () => {
                 trigger={["click"]}
                 overlay={
                   <Menu>
-                    <Menu.Item key={"logout"} onClick={logout}>
+                    <Menu.Item key={"logout"} onClick={handleLogout}>
                       Вийти
                     </Menu.Item>
                   </Menu>

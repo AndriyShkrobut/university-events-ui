@@ -51,8 +51,6 @@ const AuthProvider: React.FC = ({ children }) => {
     window.localStorage.removeItem(ACCESS_TOKEN_KEY);
     setIsLoggedIn(false);
     setUser(null);
-
-    notification.success({ message: "Ви успішно вийшли з облікового запису" });
   };
 
   useEffect(() => {
