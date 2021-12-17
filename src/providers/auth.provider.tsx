@@ -4,11 +4,10 @@ import JwtDecode from "jwt-decode";
 import authApi from "api/auth.api";
 import AuthContext, { AuthContextType } from "context/auth.context";
 import useUser from "hooks/use-user";
-import { ILoginPayload, ITokenPayload } from "interfaces/auth.interface";
+import { ILoginPayload, ITokenPayload, Role } from "interfaces/auth.interface";
+import { notification } from "antd";
 
 export const ACCESS_TOKEN_KEY = "access_token";
-
-const ADMIN_ROLE_NAME = "Admin";
 
 const AuthProvider: React.FC = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<AuthContextType["isLoggedIn"]>(false);
@@ -19,8 +18,14 @@ const AuthProvider: React.FC = ({ children }) => {
   const isAdmin = useMemo<boolean>(() => {
     if (!user || !isLoggedIn) return false;
 
-    return user.roles.some((item) => item.name === ADMIN_ROLE_NAME);
+    return user.roles.some((item) => item.name === Role.ADMIN);
   }, [isLoggedIn, user]);
+
+  const roles = useMemo<Role[]>(() => {
+    if (!user) return [];
+
+    return user.roles.map((item) => item.name);
+  }, [user]);
 
   const login = useCallback((payload: ILoginPayload) => {
     setIsLoading(true);
@@ -45,6 +50,9 @@ const AuthProvider: React.FC = ({ children }) => {
   const logout = () => {
     window.localStorage.removeItem(ACCESS_TOKEN_KEY);
     setIsLoggedIn(false);
+    setUser(null);
+
+    notification.success({ message: "Ви успішно вийшли з облікового запису" });
   };
 
   useEffect(() => {
@@ -56,6 +64,11 @@ const AuthProvider: React.FC = ({ children }) => {
 
     if (token) {
       const decodedToken = JwtDecode<ITokenPayload>(token);
+
+      if (Date.now() > decodedToken.exp * 1000) {
+        return logout();
+      }
+
       const userId = Number(decodedToken.id);
 
       getUserById(userId)
@@ -73,7 +86,7 @@ const AuthProvider: React.FC = ({ children }) => {
     }
   }, [getUserById, isLoggedIn]);
 
-  const value = { isLoggedIn, isLoading, isAdmin, login, logout, user };
+  const value = { isLoggedIn, isLoading, isAdmin, login, logout, user, roles };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

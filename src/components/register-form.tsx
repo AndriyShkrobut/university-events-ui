@@ -48,8 +48,11 @@ const RegisterForm: React.FC = () => {
         const loginData = { login: values.email, password: values.password };
         return login(loginData);
       })
-      .catch((error) => {
-        notification.error({ message: "Помилка при рєстрації", description: error.message });
+      .catch(() => {
+        notification.error({
+          message: "Помилка при рєстрації",
+          description: "Будь ласка перевірте правильність введених даних",
+        });
       })
       .then(() => {
         navigate("/");

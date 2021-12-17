@@ -28,8 +28,11 @@ const LoginForm: React.FC = () => {
         notification.success({ message: "Ви успішно увійшли!" });
         navigate("/");
       })
-      .catch((error) => {
-        notification.error({ message: "Помилка при входженні", description: error.message });
+      .catch(() => {
+        notification.error({
+          message: "Помилка при входженні",
+          description: "Дані для входу неправильні",
+        });
       });
   };
 

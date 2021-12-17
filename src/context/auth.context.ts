@@ -1,6 +1,6 @@
 import React from "react";
 import { IUser } from "interfaces/user.interface";
-import { IAuth, ILoginPayload } from "interfaces/auth.interface";
+import { IAuth, ILoginPayload, Role } from "interfaces/auth.interface";
 
 export type AuthContextType = {
   isLoggedIn: boolean;
@@ -9,6 +9,7 @@ export type AuthContextType = {
   login(payload: ILoginPayload): Promise<IAuth>;
   logout(): void;
   user: IUser | null;
+  roles: Role[];
 };
 
 const AuthContext = React.createContext<AuthContextType>({} as AuthContextType);

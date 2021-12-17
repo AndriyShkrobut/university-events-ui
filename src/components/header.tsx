@@ -73,14 +73,19 @@ const Header: React.FC = () => {
                 trigger={["click"]}
                 overlay={
                   <Menu>
-                    <Menu.Item key={"my-profile"}>Мій профіль</Menu.Item>
                     <Menu.Item key={"logout"} onClick={logout}>
                       Вийти
                     </Menu.Item>
                   </Menu>
                 }
               >
-                <Avatar key={"avatar"} size={"large"} src={avatarSrc} icon={<UserOutlined />} />
+                <Avatar
+                  key={"avatar"}
+                  size={"large"}
+                  src={avatarSrc}
+                  icon={<UserOutlined />}
+                  style={{ cursor: "pointer" }}
+                />
               </Dropdown>
             </Space>
           )}

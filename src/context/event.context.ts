@@ -9,6 +9,8 @@ export type EventContextType = {
   createEvent(payload: ICreateEventPayload): Promise<IEvent>;
   updateEvent(id: number, payload: IUpdateEventPayload): Promise<IEvent>;
   deleteEvent(id: number): Promise<IEvent>;
+  visitEvent(id: number): Promise<void>;
+  unVisitEvent(id: number): Promise<void>;
 };
 
 const EventContext = React.createContext<EventContextType>({} as EventContextType);

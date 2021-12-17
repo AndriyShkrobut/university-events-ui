@@ -3,6 +3,7 @@ import { Col, Empty, Row, Typography } from "antd";
 
 import { IEvent } from "interfaces/event.interface";
 import { EventCard } from "./event-card";
+import moment from "moment";
 
 type SoonEventsListProps = {
   events: IEvent[];
@@ -17,7 +18,18 @@ export const EventsList: React.FC<SoonEventsListProps> = ({ events = [], isLoadi
 
   const eventsToRender = useMemo<IEvent[]>(() => {
     // NOTE: array of empty objects is placeholder for skeleton
-    return isLoading ? new Array(10).fill({}) : events;
+    if (isLoading) {
+      new Array(10).fill({});
+    }
+
+    const sortedEvents = events.sort((left, right) => {
+      const leftMoment = moment.utc(left.startDate).local();
+      const rightMoment = moment.utc(right.startDate).local();
+
+      return leftMoment.diff(rightMoment);
+    });
+
+    return sortedEvents;
   }, [events, isLoading]);
 
   return (

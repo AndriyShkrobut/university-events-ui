@@ -48,7 +48,7 @@ type EventFormProps = {
   mode: Mode;
 };
 
-const MAX_DESCRIPTION_LENGTH = 400;
+const MAX_DESCRIPTION_LENGTH = 500;
 
 const initialValues = {
   title: "",
@@ -178,24 +178,26 @@ const EventForm: React.FC<EventFormProps> = ({
             </Select>
           </Form.Item>
         </Col>
-        <Col span={24} order={6}>
-          <Form.Item
-            label="Зображення"
-            name="images"
-            valuePropName={"fileList"}
-            validateTrigger={["onChange"]}
-            rules={[
-              {
-                type: "array",
-                min: 1,
-                max: 5,
-                message: "Подія має містити від 1 до 5 зображень",
-              },
-            ]}
-          >
-            <FileUploader listType={"picture-card"} maxCount={5} />
-          </Form.Item>
-        </Col>
+        {mode !== Mode.EDIT && (
+          <Col span={24} order={6}>
+            <Form.Item
+              label="Зображення"
+              name="images"
+              valuePropName={"fileList"}
+              validateTrigger={["onChange"]}
+              rules={[
+                {
+                  type: "array",
+                  min: 1,
+                  max: 5,
+                  message: "Подія має містити від 1 до 5 зображень",
+                },
+              ]}
+            >
+              <FileUploader listType={"picture-card"} maxCount={5} />
+            </Form.Item>
+          </Col>
+        )}
         <Col span={24} order={7}>
           <Form.Item label="Термін події" name="dateRange" rules={[dateRangeRequiredRule]} required>
             <DatePicker.RangePicker

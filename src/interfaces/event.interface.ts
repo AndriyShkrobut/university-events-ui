@@ -10,7 +10,7 @@ export interface IEvent {
   description: string;
   startDate: string;
   endDate: string;
-  createDate: Date;
+  createDate: string;
   location: string;
   isDeleted: boolean;
   category: IEventCategory;
