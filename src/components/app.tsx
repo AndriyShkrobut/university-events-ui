@@ -9,6 +9,7 @@ import Login from "pages/login";
 import CreateEvent from "pages/create-event";
 import EditEvent from "pages/edit-event";
 import NotFound from "./not-found";
+import EventDetails from "../pages/event-details";
 
 const App: React.FC = () => {
   return (
@@ -25,6 +26,14 @@ const App: React.FC = () => {
           <Route path={"/events/create"} element={<CreateEvent />} />
           <Route path={"/events/:id/edit"} element={<EditEvent />} />
         </Route>
+        <Route
+          path={"/events/:id"}
+          element={
+            <Page>
+              <EventDetails />
+            </Page>
+          }
+        />
         <Route
           path={"/register"}
           element={

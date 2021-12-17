@@ -25,6 +25,14 @@ class EventApi implements IApi<IEvent> {
   update(id: number, body: FormData): Promise<AxiosResponse<IEvent>> {
     return httpClient.put(`${EventApi.BASE_URL}/${id}`, body);
   }
+
+  visit(id: number): Promise<void> {
+    return httpClient.post(`${EventApi.BASE_URL}/${id}/visit`);
+  }
+
+  unVisit(id: number): Promise<void> {
+    return httpClient.post(`${EventApi.BASE_URL}/${id}/unvisit`);
+  }
 }
 
 export default new EventApi();

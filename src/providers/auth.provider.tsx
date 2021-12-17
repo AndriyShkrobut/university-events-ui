@@ -5,6 +5,7 @@ import authApi from "api/auth.api";
 import AuthContext, { AuthContextType } from "context/auth.context";
 import useUser from "hooks/use-user";
 import { ILoginPayload, ITokenPayload, Role } from "interfaces/auth.interface";
+import { notification } from "antd";
 
 export const ACCESS_TOKEN_KEY = "access_token";
 
@@ -50,6 +51,8 @@ const AuthProvider: React.FC = ({ children }) => {
     window.localStorage.removeItem(ACCESS_TOKEN_KEY);
     setIsLoggedIn(false);
     setUser(null);
+
+    notification.success({ message: "Ви успішно вийшли з облікового запису" });
   };
 
   useEffect(() => {

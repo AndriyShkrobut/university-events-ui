@@ -57,6 +57,14 @@ const EventProvider: React.FC = ({ children }) => {
     });
   }, []);
 
+  const visitEvent = useCallback((id: number) => {
+    return eventApi.visit(id);
+  }, []);
+
+  const unVisitEvent = useCallback((id: number) => {
+    return eventApi.unVisit(id);
+  }, []);
+
   const value = {
     events,
     isLoading,
@@ -65,6 +73,8 @@ const EventProvider: React.FC = ({ children }) => {
     createEvent,
     updateEvent,
     deleteEvent,
+    visitEvent,
+    unVisitEvent,
   };
 
   return <EventContext.Provider value={value}>{children}</EventContext.Provider>;

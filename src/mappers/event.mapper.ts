@@ -6,7 +6,10 @@ import { FormValues } from "components/event-form";
 export const mapEventToFormValues = (event: IEvent): FormValues => {
   const { title, description, startDate, endDate, location } = event;
 
-  const dateRange = [moment(startDate), moment(endDate)] as [Moment, Moment];
+  const startDateLocalMoment = moment.utc(startDate).local();
+  const endDateLocalMoment = moment.utc(endDate).local();
+
+  const dateRange = [startDateLocalMoment, endDateLocalMoment] as [Moment, Moment];
   const category = Number(event.category.id);
   const organizer = Number(event.organizer.id);
 
